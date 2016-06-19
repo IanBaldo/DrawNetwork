@@ -1,6 +1,10 @@
 import pygame
 import Zoom
 
+# Colors
+WHITE = (255,255,255)
+BLACK = (0,0,0)
+
 class NodeClass(object):
     __id = 0
     __name = ""
@@ -31,7 +35,7 @@ class NodeClass(object):
         self.__pxHeight = Zoom.dimToPixels(self.__height)
         # Text
         fontObj = pygame.font.Font('freesansbold.ttf', 12)
-        self.__textSurf = fontObj.render(self.__name, True, (0,0,0), (255,255,255))
+        self.__textSurf = fontObj.render(self.__name, True, BLACK, WHITE)
         self.__textObj = self.__textSurf.get_rect()
 
     def getId(self):
