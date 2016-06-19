@@ -5,20 +5,18 @@ import Node
 import Zoom
 
 # Window
-window_dimensions = window_width, window_height = (640,640)
+window_dimensions = window_width, window_height = (800,600)
 DISPLAYsurf = pygame.display.set_mode(window_dimensions)
 # Window Caption
 pygame.display.set_caption("Editor")
 
 # Initializes pygame
 pygame.init()
+# Initialize Zoom Module
+Zoom.init(window_width,window_height)
 
 # Clock
 clock = pygame.time.Clock()
-
-# Initialize Zoom Module
-Zoom.init(window_width,window_height,100,100)
-
 
 # Colors
 LIME = (0,255,0)
@@ -28,10 +26,9 @@ BLUE = (0,0,255)
 
 # Node list
 nodeList = []
-nodeList.append(Node.NodeClass(1,50,50))
-nodeList.append(Node.NodeClass(2,0,0))
-nodeList.append(Node.NodeClass(3,10,5))
-nodeList.append(Node.NodeClass(4,100,100))
+for i in range(0,60):
+    nodeList.append(Node.NodeClass())
+
 
 
 # Main Loop
