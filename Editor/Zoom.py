@@ -29,13 +29,18 @@ def zoomOut():
         return
     zoom = zoom - 0.5
 
+def pxXToUnit(pos):
+    return pos/x_factor
+
+def pxYToUnit(pos):
+    return pos/y_factor
+
 def posXtoPixel(pos):
     global zoom
     if zoom == 1:
         offset = 0
     else:
         offset = int((win_width - win_width/zoom)/2)
-    print ("win_width:%d offset:%d pos:%d" % (win_width,offset,pos))
     return (((pos * x_factor) - offset) * zoom)
 
 def posYtoPixel(pos):
