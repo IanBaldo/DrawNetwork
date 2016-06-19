@@ -25,32 +25,30 @@ def zoomIn():
 
 def zoomOut():
     global zoom
-    if zoom == 0.5:
+    if zoom == 1:
         return
     zoom = zoom - 0.5
 
 def pxXToUnit(pos):
-    return pos/x_factor
+    global win_width, zoom, x_factor
+    offset = int((win_width - win_width/zoom)/2)
+    return ((pos/zoom)+ offset)/x_factor
 
 def pxYToUnit(pos):
-    return pos/y_factor
+    global win_height, zoom, y_factor
+    offset = int((win_height - win_height/zoom)/2)
+    return ((pos/zoom)+ offset)/y_factor
 
 def posXtoPixel(pos):
-    global zoom
-    if zoom == 1:
-        offset = 0
-    else:
-        offset = int((win_width - win_width/zoom)/2)
+    global zoom, win_width, x_factor
+    offset = int((win_width - win_width/zoom)/2)
     return (((pos * x_factor) - offset) * zoom)
 
 def posYtoPixel(pos):
-    global zoom
-    if zoom == 1:
-        offset = 0
-    else:
-        offset = int((win_height - win_height/zoom)/2)
+    global zoom, win_height, y_factor
+    offset = int((win_height - win_height/zoom)/2)
     return (((pos * y_factor) - offset) * zoom)
     
 def dimToPixels(dim):
-    global zoom
+    global zoom, x_factor
     return dim * x_factor * zoom
