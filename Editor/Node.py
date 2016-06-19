@@ -6,6 +6,16 @@ WHITE = (255,255,255)
 BLACK = (0,0,0)
 BLUE = (0,0,255)
 
+#Id Pool
+idPool = 1
+# Coords for the next node to be added
+nextX = 0
+nextY = 0
+
+# Fictional Unit Size
+nodeWidth = float(1.5)
+nodeHeight = float(1)
+
 class NodeClass(object):
     __id = 0
     __name = ""
@@ -13,9 +23,6 @@ class NodeClass(object):
     # Fictional Unit Coords
     __unitX = 0
     __unitY = 0
-    # Fictional Unit Size
-    __width = 8
-    __height = 5
 
     # Pixel Coords
     __pxX = 0
@@ -32,20 +39,33 @@ class NodeClass(object):
 
     __selected = False
 
-    def __init__(self,id,x,y):
-        self.__name = "Mote "+str(id)
-        self.__id = id
+    # Constructor
+    def __init__(self):
+        global idPool, nodeWidth, nodeHeight, nextX, nextY
+        self.__name = "Mote "+str(idPool)
+        self.__id = idPool
         self.__color = BLACK
-        self.__unitX = x
-        self.__unitY = y
+        self.__unitX = nextX
+        self.__unitY = nextY
         self.__pxX = Zoom.posXtoPixel(self.__unitX)
         self.__pxY = Zoom.posYtoPixel(self.__unitY)
-        self.__pxWidth = Zoom.dimToPixels(self.__width)
-        self.__pxHeight = Zoom.dimToPixels(self.__height)
+        self.__pxWidth = Zoom.dimToPixels(nodeWidth)
+        self.__pxHeight = Zoom.dimToPixels(nodeHeight)
         # Text
         fontObj = pygame.font.Font('freesansbold.ttf', 12)
         self.__textSurf = fontObj.render(self.__name, True, BLACK, WHITE)
         self.__textObj = self.__textSurf.get_rect()
+        # Increment idPool
+        idPool += 1
+
+        tempX = nextX + nodeWidth + 1
+        if tempX < Zoom.getMaxX():
+            global nextX, nodeWidth
+            nextX = nextX + nodeWidth + 1
+        else:
+            global nextY, nodeHeight
+            nextY = nextY + nodeHeight + 1
+            nextX = 0
 
     def getId(self):
         return self.__id
@@ -53,6 +73,7 @@ class NodeClass(object):
     def isSelected(self):
         return self.__selected
 
+    # Drag-n-Drop Functions
     def followCursor(self,mCoords):
         self.__unitX = Zoom.pxXToUnit(mCoords[0])
         self.__unitY = Zoom.pxYToUnit(mCoords[1])
@@ -70,13 +91,16 @@ class NodeClass(object):
     def released(self):
         self.__selected = False
         self.__color = BLACK
+    # End Drag-n-Drop Functions
+    
 
     def updateCoords(self):
+        global nodeHeight, nodeWidth
         if not self.__selected:
             self.__pxX = Zoom.posXtoPixel(self.__unitX)
             self.__pxY = Zoom.posYtoPixel(self.__unitY)
-            self.__pxWidth = Zoom.dimToPixels(self.__width)
-            self.__pxHeight = Zoom.dimToPixels(self.__height)
+            self.__pxWidth = Zoom.dimToPixels(nodeWidth)
+            self.__pxHeight = Zoom.dimToPixels(nodeHeight)
 
     def draw(self, surface):
         pygame.draw.rect(surface,self.__color,(self.__pxX,self.__pxY,self.__pxWidth,self.__pxHeight),self.__border)
