@@ -14,8 +14,8 @@ class NodeClass(object):
     __unitX = 0
     __unitY = 0
     # Fictional Unit Size
-    __width = 15
-    __height = 10
+    __width = 8
+    __height = 5
 
     # Pixel Coords
     __pxX = 0
