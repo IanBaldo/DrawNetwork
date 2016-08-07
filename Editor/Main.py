@@ -39,7 +39,8 @@ while True:
         node.draw(DISPLAYsurf)
 
     for node in nodeList:
-        if node.isSelected():
+        n = node.isSelected() # n[0]: Boolean (isSelected)  n[1]: String (MouseKey)
+        if (n[0]) and (n[1] == "LEFT"):
             mouse_pos = mouse.get_pos()
             node.followCursor(mouse_pos)
 
@@ -50,13 +51,33 @@ while True:
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = mouse.get_pos()
-            for node in nodeList:
-                node.clicked(mouse_pos)
+            print pygame.mouse.get_pressed()
+            if event.button == 1: # Left Mouse Key
+                for node in nodeList:
+                    if node.clicked(mouse_pos):
+                        node.select(event.button)
+                        break
+            
+            if event.button == 3: # Right Mouse Key
+                for node in nodeList:
+                    if node.clicked(mouse_pos):
+                        node.select(event.button)
 
         elif event.type == pygame.MOUSEBUTTONUP:
-            for node in nodeList:
-                if node.isSelected():
-                    node.released()
+            if event.button == 1: # Left Mouse Key
+                for node in nodeList:
+                    if node.isSelected():
+                        node.released()
+
+            if event.button == 3: # Right Mouse Key
+                mouse_pos = mouse.get_pos()
+                for node in nodeList:
+                    if node.clicked(mouse_pos):
+                        print "RIGHT MOUSE UP FOR %d" % node.getId() 
+                        n = node.isSelected() # n[0]: Boolean (isSelected)  n[1]: String (MouseKey)
+                        if (n[0]) and (n[1] == "RIGHT"):
+                            nodeList.remove(node)
+                        
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
