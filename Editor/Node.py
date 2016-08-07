@@ -20,6 +20,7 @@ class NodeClass(object):
     __id = 0
     __name = ""
     __color = BLACK
+    __mKey = None
     # Fictional Unit Coords
     __unitX = 0
     __unitY = 0
@@ -42,7 +43,7 @@ class NodeClass(object):
     # Constructor
     def __init__(self):
         global idPool, nodeWidth, nodeHeight, nextX, nextY
-        self.__name = "Mote "+str(idPool)
+        self.__name = str(idPool)
         self.__id = idPool
         self.__color = BLACK
         self.__unitX = nextX
@@ -52,7 +53,7 @@ class NodeClass(object):
         self.__pxWidth = Zoom.dimToPixels(nodeWidth)
         self.__pxHeight = Zoom.dimToPixels(nodeHeight)
         # Text
-        fontObj = pygame.font.Font('freesansbold.ttf', 12)
+        fontObj = pygame.font.Font('freesansbold.ttf', int(Zoom.dimToPixels(0.5)))
         self.__textSurf = fontObj.render(self.__name, True, BLACK, WHITE)
         self.__textObj = self.__textSurf.get_rect()
         # Increment idPool
@@ -71,7 +72,19 @@ class NodeClass(object):
         return self.__id
     
     def isSelected(self):
-        return self.__selected
+        return (self.__selected,self.__mKey)
+
+    def select(self, mKey):
+        if mKey == 1:
+            self.__mKey = "LEFT"
+        elif mKey == 2:
+            self.__mKey = "MIDDLE"
+        elif mKey == 3:
+            self.__mKey = "RIGHT"
+
+        self.__selected = True
+        self.__color = BLUE
+        print "Node %d selected with %s mouse key" % (self.__id, self.__mKey)
 
     # Drag-n-Drop Functions
     def followCursor(self,mCoords):
@@ -81,18 +94,17 @@ class NodeClass(object):
         self.__pxY = Zoom.posYtoPixel(self.__unitY)
         print ("X:%d  Y:%d" % (self.__unitX, self.__unitY))
 
+    # End Drag-n-Drop Functions
+
     def clicked(self,mouse_position):
         if mouse_position[0] > self.__pxX and mouse_position[0] < (self.__pxX + self.__pxWidth):
-            if mouse_position[1] > self.__pxY and mouse_position[1] < (self.__pxY + self.__pxHeight):
-                self.__selected = True
-                self.__color = BLUE
-                print "Node %d selected" % self.__id
+            if mouse_position[1] > self.__pxY and mouse_position[1] < (self.__pxY + self.__pxHeight):               
+                return True
+        return False
 
     def released(self):
         self.__selected = False
         self.__color = BLACK
-    # End Drag-n-Drop Functions
-    
 
     def updateCoords(self):
         global nodeHeight, nodeWidth
@@ -101,9 +113,12 @@ class NodeClass(object):
             self.__pxY = Zoom.posYtoPixel(self.__unitY)
             self.__pxWidth = Zoom.dimToPixels(nodeWidth)
             self.__pxHeight = Zoom.dimToPixels(nodeHeight)
+            fontObj = pygame.font.Font('freesansbold.ttf', int(Zoom.dimToPixels(0.5)))
+            self.__textSurf = fontObj.render(self.__name, True, BLACK, WHITE)
+            self.__textObj = self.__textSurf.get_rect()
 
     def draw(self, surface):
         pygame.draw.rect(surface,self.__color,(self.__pxX,self.__pxY,self.__pxWidth,self.__pxHeight),self.__border)
         pygame.draw.rect(surface,WHITE,(self.__pxX + self.__border,self.__pxY + self.__border,self.__pxWidth - self.__border,self.__pxHeight - self.__border),0)
-        self.__textObj.center = (self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/8))
+        self.__textObj.center = (self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2))
         surface.blit(self.__textSurf, self.__textObj)
