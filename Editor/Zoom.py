@@ -33,7 +33,7 @@ def zoomIn():
 
 def zoomOut():
     global zoom, win_height, win_width, max_x_unit, max_y_unit
-    if zoom == 1:
+    if zoom == 0.5:
         return
     zoom = zoom - 0.5
     max_x_unit = float(2*win_width/(64*zoom))
