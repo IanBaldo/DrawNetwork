@@ -6,14 +6,17 @@ import Zoom
 
 # Window
 window_dimensions = window_width, window_height = (800,600)
-DISPLAYsurf = pygame.display.set_mode(window_dimensions)
+MAINsurf = pygame.display.set_mode(window_dimensions)
+DISPLAYsurf = MAINsurf.subsurface((100,0,(window_width-100),window_height))
+MENUsurf = MAINsurf.subsurface((0,0,100,window_height))
+
 # Window Caption
 pygame.display.set_caption("Editor")
 
 # Initializes pygame
 pygame.init()
 # Initialize Zoom Module
-Zoom.init(window_width,window_height)
+Zoom.init(DISPLAYsurf.get_width(),DISPLAYsurf.get_height())
 
 # Clock
 clock = pygame.time.Clock()
@@ -22,6 +25,7 @@ clock = pygame.time.Clock()
 LIME = (0,255,0)
 WHITE = (255,255,255)
 BLACK = (0,0,0)
+GREY = (210,210,210)
 BLUE = (0,0,255)
 
 # Node list
@@ -30,10 +34,20 @@ for i in range(0,60):
     nodeList.append(Node.NodeClass())
 
 
+def surfaceClick(mouse_pos):
+    displayCoord = DISPLAYsurf.get_abs_offset()
+    if mouse_pos[0] < displayCoord[0]:
+        # Clicked outside of the DISPLAYsurf
+        return MENUsurf, mouse_pos
+    else:
+        # Clicked inside of the DISPLAYsurf
+        return DISPLAYsurf, (mouse_pos[0]-displayCoord[0],mouse_pos[1])
+
 
 # Main Loop
 while True:
     DISPLAYsurf.fill(WHITE)
+    MENUsurf.fill(GREY)
 
     for node in nodeList:
         node.draw(DISPLAYsurf)
@@ -41,8 +55,9 @@ while True:
     for node in nodeList:
         n = node.isSelected() # n[0]: Boolean (isSelected)  n[1]: String (MouseKey)
         if (n[0]) and (n[1] == "LEFT"):
-            mouse_pos = mouse.get_pos()
-            node.followCursor(mouse_pos)
+            surface ,mouse_pos = surfaceClick(mouse.get_pos())
+            if surface == DISPLAYsurf:
+                node.followCursor(mouse_pos)
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -50,7 +65,9 @@ while True:
             sys.exit()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_pos = mouse.get_pos()
+         #   mouse_pos = mouse.get_pos()
+            xxxSurf,mouse_pos = surfaceClick(mouse.get_pos())
+            
             print pygame.mouse.get_pressed()
             if event.button == 1: # Left Mouse Key
                 for node in nodeList:
