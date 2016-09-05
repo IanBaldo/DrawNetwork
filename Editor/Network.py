@@ -1,0 +1,99 @@
+import Node, Zoom
+
+WHITE = (255,255,255)
+
+class NetworkClass(object):
+
+    __surface = None
+    __nodeList = None
+
+    def __init__(self, surface):
+        self.__surface = surface
+        self.__nodeList = []
+
+        # Initialize Zoom Module
+        Zoom.init(self.__surface.get_width(),self.__surface.get_height())
+
+    def getSurface(self):
+        return self.__surface
+
+    def getNodeList(self):
+        return self.__nodeList
+
+    def getNode(self, id):
+        for node in self.__nodeList:
+            if node.id == id:
+                return node
+        return -1
+
+    def addNode(self):
+        self.__nodeList.append(Node.NodeClass())
+
+    def deleteNode(self, node):
+        self.__nodeList.remove(node)
+
+    def refresh(self):
+        self.__surface.fill(WHITE)
+        for node in self.__nodeList:
+            node.draw(self.__surface)
+
+    def procNetwork(self, mouse_pos):
+        for node in self.__nodeList:
+            n = node.isSelected() # n[0]: Boolean (isSelected)  n[1]: String (MouseKey)
+            if (n[0]) and (n[1] == "LEFT"):
+                node.followCursor(mouse_pos)
+
+    def mouseHandler(self, evtType, values=None):
+        if values == None:
+            return # Something went wrong...
+        if evtType == "BUTTONDOWN":
+            if values["key"] == 1: # LEFT Mouse Key
+                for node in self.__nodeList:
+                    print node.clicked(values["mouse_pos"])
+                    if node.clicked(values["mouse_pos"]):
+                        node.select(values["key"])
+                        break
+
+            if values["key"] == 3: # Right Mouse Key
+                for node in self.__nodeList:
+                    if node.clicked(values["mouse_pos"]):
+                        node.select(values["key"])
+
+        elif evtType == "BUTTONUP":
+            if values["key"] == 1: # LEFT Mouse Key
+                for node in self.__nodeList:
+                    if node.isSelected():
+                        node.released()
+
+            if values["key"] == 3: # Right Mouse Key
+                for node in self.__nodeList:
+                    if node.clicked(values["mouse_pos"]):
+                        print "RIGHT MOUSE UP FOR %d" % node.getId() 
+                        n = node.isSelected() # n[0]: Boolean (isSelected)  n[1]: String (MouseKey)
+                        if (n[0]) and (n[1] == "RIGHT"):
+                            self.__nodeList.remove(node)
+
+    def keyboardHandler(self, evtType, values=None):
+        if evtType == "KEYDOWN":
+            if values["key"] == 273: # "K_UP"
+                Zoom.zoomIn()
+                for node in self.__nodeList:
+                    node.updateCoords()
+
+            elif values["key"] == 274: # "K_DOWN"
+                Zoom.zoomOut()
+                for node in self.__nodeList:
+                    node.updateCoords()
+
+            print ("Zoom:%f" %(Zoom.zoom))
+
+    # Values ["key","mouse_pos"]
+    def eventsHandler(self, source, eType, values=None):
+        if source == "mouse":
+            self.mouseHandler(eType,values)
+        elif source == "keyboard":
+            self.keyboardHandler(eType,values)
+        else:
+            print "Unknown input source"
+            
+      
