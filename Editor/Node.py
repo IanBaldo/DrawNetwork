@@ -84,7 +84,7 @@ class NodeClass(object):
 
         self.__selected = True
         self.__color = BLUE
-        print "Node %d selected with %s mouse key" % (self.__id, self.__mKey)
+       # print "Node %d selected with %s mouse key" % (self.__id, self.__mKey)
 
     # Drag-n-Drop Functions
     def followCursor(self,mCoords):
@@ -92,7 +92,7 @@ class NodeClass(object):
         self.__unitY = Zoom.pxYToUnit(mCoords[1])
         self.__pxX = Zoom.posXtoPixel(self.__unitX)
         self.__pxY = Zoom.posYtoPixel(self.__unitY)
-        print ("X:%d  Y:%d" % (self.__unitX, self.__unitY))
+        #print ("X:%d  Y:%d" % (self.__unitX, self.__unitY))
 
     # End Drag-n-Drop Functions
 

@@ -1,7 +1,7 @@
 import pygame, sys
 from pygame import mouse
 from pygame.locals import *
-import Network
+import Network, Menu
 
 # Window
 window_dimensions = window_width, window_height = (800,600)
@@ -9,15 +9,15 @@ MAINsurf = pygame.display.set_mode(window_dimensions)
 
 menuWidth = 100
 
-NetworkObj = Network.NetworkClass(MAINsurf.subsurface((menuWidth,0,(window_width-menuWidth),window_height)))
+# Initializes pygame
+pygame.init()
 
-MENUsurf = MAINsurf.subsurface((0,0,menuWidth,window_height))
+NetworkObj = Network.NetworkClass(MAINsurf.subsurface((menuWidth,0,(window_width-menuWidth),window_height)))
+MenuObj = Menu.MenuClass(MAINsurf.subsurface((0,0,menuWidth,window_height)), NetworkObj)
+
 
 # Window Caption
 pygame.display.set_caption("Editor")
-
-# Initializes pygame
-pygame.init()
 
 
 # Clock
@@ -35,41 +35,31 @@ def surfaceClick(mouse_pos):
     displayCoord = NetworkObj.getSurface().get_abs_offset()
     if mouse_pos[0] < displayCoord[0]:
         # Clicked outside of the DISPLAYsurf
-        return MENUsurf, mouse_pos
+        return MenuObj.getSurface(), mouse_pos
     else:
         # Clicked inside of the DISPLAYsurf
         return NetworkObj.getSurface(), (mouse_pos[0]-displayCoord[0],mouse_pos[1])
-
 
 NetworkObj.addNode()
 
 # Main Loop
 while True:
     
-    MENUsurf.fill(GREY)
-
     CURRENTsurf,mouse_pos = surfaceClick(mouse.get_pos())
     if (CURRENTsurf == NetworkObj.getSurface()):
         NetworkObj.procNetwork(mouse_pos)
     #    print "Networksurf"
     else:
-        print "MENUsurf"
+        MenuObj.procMenu(mouse_pos)
 
     NetworkObj.refresh()
+    MenuObj.refresh()
 
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            NetworkObj.eventsHandler("mouse","BUTTONDOWN", values={"key":event.button,"mouse_pos":mouse_pos})
-        elif event.type == pygame.MOUSEBUTTONUP:
-            NetworkObj.eventsHandler("mouse","BUTTONUP"  , values={"key":event.button,"mouse_pos":mouse_pos})
-        elif event.type == pygame.KEYDOWN:
-            NetworkObj.eventsHandler("keyboard","KEYDOWN", values={"key":event.key,"mouse_pos":mouse_pos})
-        elif event.type == pygame.KEYUP:
-            NetworkObj.eventsHandler("keyboard","KEYUP"  , values={"key":event.key,"mouse_pos":mouse_pos})
+    
             
     # Updates the display
     pygame.display.update()

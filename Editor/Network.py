@@ -1,3 +1,4 @@
+import pygame
 import Node, Zoom
 
 WHITE = (255,255,255)
@@ -32,6 +33,9 @@ class NetworkClass(object):
     def deleteNode(self, node):
         self.__nodeList.remove(node)
 
+    def deleteSelectedNodes(self):
+        self.__nodeList[:] = [node for node in self.__nodeList if not node.isSelected()[0]]
+
     def refresh(self):
         self.__surface.fill(WHITE)
         for node in self.__nodeList:
@@ -42,14 +46,24 @@ class NetworkClass(object):
             n = node.isSelected() # n[0]: Boolean (isSelected)  n[1]: String (MouseKey)
             if (n[0]) and (n[1] == "LEFT"):
                 node.followCursor(mouse_pos)
+        
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.eventsHandler("mouse","BUTTONDOWN", values={"key":event.button,"mouse_pos":mouse_pos})
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.eventsHandler("mouse","BUTTONUP"  , values={"key":event.button,"mouse_pos":mouse_pos})
+            elif event.type == pygame.KEYDOWN:
+                self.eventsHandler("keyboard","KEYDOWN", values={"key":event.key,"mouse_pos":mouse_pos})
+            elif event.type == pygame.KEYUP:
+                self.eventsHandler("keyboard","KEYUP"  , values={"key":event.key,"mouse_pos":mouse_pos})
 
-    def mouseHandler(self, evtType, values=None):
+    def __mouseHandler(self, evtType, values=None):
         if values == None:
             return # Something went wrong...
         if evtType == "BUTTONDOWN":
             if values["key"] == 1: # LEFT Mouse Key
                 for node in self.__nodeList:
-                    print node.clicked(values["mouse_pos"])
+                  #  print node.clicked(values["mouse_pos"])
                     if node.clicked(values["mouse_pos"]):
                         node.select(values["key"])
                         break
@@ -68,12 +82,12 @@ class NetworkClass(object):
             if values["key"] == 3: # Right Mouse Key
                 for node in self.__nodeList:
                     if node.clicked(values["mouse_pos"]):
-                        print "RIGHT MOUSE UP FOR %d" % node.getId() 
+                    #    print "RIGHT MOUSE UP FOR %d" % node.getId() 
                         n = node.isSelected() # n[0]: Boolean (isSelected)  n[1]: String (MouseKey)
-                        if (n[0]) and (n[1] == "RIGHT"):
-                            self.__nodeList.remove(node)
+                        #if (n[0]) and (n[1] == "RIGHT"):
+							#self.deleteNode(node)
 
-    def keyboardHandler(self, evtType, values=None):
+    def __keyboardHandler(self, evtType, values=None):
         if evtType == "KEYDOWN":
             if values["key"] == 273: # "K_UP"
                 Zoom.zoomIn()
@@ -90,9 +104,9 @@ class NetworkClass(object):
     # Values ["key","mouse_pos"]
     def eventsHandler(self, source, eType, values=None):
         if source == "mouse":
-            self.mouseHandler(eType,values)
+            self.__mouseHandler(eType,values)
         elif source == "keyboard":
-            self.keyboardHandler(eType,values)
+            self.__keyboardHandler(eType,values)
         else:
             print "Unknown input source"
             
