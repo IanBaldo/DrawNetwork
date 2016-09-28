@@ -61,25 +61,30 @@ class NetworkClass(object):
         if values == None:
             return # Something went wrong...
         if evtType == "BUTTONDOWN":
-            if values["key"] == 1: # LEFT Mouse Key
+            if values["key"] == 1: # LEFT Mouse Button
+                lastNode = None
                 for node in self.__nodeList:
                   #  print node.clicked(values["mouse_pos"])
                     if node.clicked(values["mouse_pos"]):
-                        node.select(values["key"])
-                        break
+                        lastNode = node
+                if (lastNode != None):    
+                    self.__nodeList.append(lastNode)
+                    self.__nodeList.remove(lastNode)
+                    lastNode.calcOffset(values["mouse_pos"])
+                    lastNode.select(values["key"])
 
-            if values["key"] == 3: # Right Mouse Key
+            if values["key"] == 3: # Right Mouse Button
                 for node in self.__nodeList:
                     if node.clicked(values["mouse_pos"]):
                         node.select(values["key"])
 
         elif evtType == "BUTTONUP":
-            if values["key"] == 1: # LEFT Mouse Key
+            if values["key"] == 1: # LEFT Mouse Button
                 for node in self.__nodeList:
                     if node.isSelected():
                         node.released()
 
-            if values["key"] == 3: # Right Mouse Key
+            if values["key"] == 3: # Right Mouse Button
                 for node in self.__nodeList:
                     if node.clicked(values["mouse_pos"]):
                     #    print "RIGHT MOUSE UP FOR %d" % node.getId() 

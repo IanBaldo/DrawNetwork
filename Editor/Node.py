@@ -36,7 +36,7 @@ class NodeClass(object):
     __textObj = None
 
     # Border Thickness
-    __border = 2
+    __border = 3
 
     __selected = False
 
@@ -87,9 +87,10 @@ class NodeClass(object):
        # print "Node %d selected with %s mouse key" % (self.__id, self.__mKey)
 
     # Drag-n-Drop Functions
-    def followCursor(self,mCoords):
-        self.__unitX = Zoom.pxXToUnit(mCoords[0])
-        self.__unitY = Zoom.pxYToUnit(mCoords[1])
+    def followCursor(self,mouse_pos):
+        print mouse_pos[0], self.__pxX, self.__offsetX
+        self.__unitX = Zoom.pxXToUnit(mouse_pos[0]-self.__offsetX)
+        self.__unitY = Zoom.pxYToUnit(mouse_pos[1]-self.__offsetY)
         self.__pxX = Zoom.posXtoPixel(self.__unitX)
         self.__pxY = Zoom.posYtoPixel(self.__unitY)
         #print ("X:%d  Y:%d" % (self.__unitX, self.__unitY))
@@ -116,6 +117,10 @@ class NodeClass(object):
             fontObj = pygame.font.Font('freesansbold.ttf', int(Zoom.dimToPixels(0.5)))
             self.__textSurf = fontObj.render(self.__name, True, BLACK, WHITE)
             self.__textObj = self.__textSurf.get_rect()
+
+    def calcOffset(self,mouse_pos):
+        self.__offsetX = mouse_pos[0] - self.__pxX
+        self.__offsetY = mouse_pos[1] - self.__pxY
 
     def draw(self, surface):
         pygame.draw.rect(surface,self.__color,(self.__pxX,self.__pxY,self.__pxWidth,self.__pxHeight),self.__border)

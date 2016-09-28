@@ -37,13 +37,6 @@ class MenuClass(object):
 
 	def deleteNode(self):
 		self.__networkObj.deleteSelectedNodes()
-		# nodeList = self.__networkObj.getNodeList()
-		# for node in nodeList:
-		# 	n = node.isSelected()
-		# 	print node.getId(), n[0]
-		# 	if n[0]:
-		# 		self.__networkObj.deleteNode(node)
-		
 	
 	def addButton(self,text,gridX,gridY,sizeCols,sizeRows,callback):
 		posX = (self.__surface.get_width() / self.__gridCols ) * gridX
