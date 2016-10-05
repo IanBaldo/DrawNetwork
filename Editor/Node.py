@@ -1,5 +1,5 @@
 import pygame
-import Zoom
+import UnitConv
 
 # Colors
 WHITE = (255,255,255)
@@ -36,7 +36,7 @@ class NodeClass(object):
     __textObj = None
 
     # Border Thickness
-    __border = 3
+    __border = 2
 
     __selected = False
 
@@ -48,25 +48,23 @@ class NodeClass(object):
         self.__color = BLACK
         self.__unitX = nextX
         self.__unitY = nextY
-        self.__pxX = Zoom.posXtoPixel(self.__unitX)
-        self.__pxY = Zoom.posYtoPixel(self.__unitY)
-        self.__pxWidth = Zoom.dimToPixels(nodeWidth)
-        self.__pxHeight = Zoom.dimToPixels(nodeHeight)
-        # Text
-        fontObj = pygame.font.Font('freesansbold.ttf', int(Zoom.dimToPixels(0.5)))
+
+        px = UnitConv.unitToPx((self.__unitX, self.__unitY))
+        self.__pxX = px[0]
+        self.__pxY = px[1]
+        
+        dimPx = UnitConv.unitDimToPx((nodeWidth,nodeHeight))
+        self.__pxWidth = dimPx[0]
+        self.__pxHeight = dimPx[1]
+
+        fontSizePx = UnitConv.unitDimToPx((0,0.5))
+        fontObj = pygame.font.Font('freesansbold.ttf',int(fontSizePx[1]))
         self.__textSurf = fontObj.render(self.__name, True, BLACK, WHITE)
         self.__textObj = self.__textSurf.get_rect()
         # Increment idPool
         idPool += 1
 
-        tempX = nextX + nodeWidth + 1
-        if tempX < Zoom.getMaxX():
-            global nextX, nodeWidth
-            nextX = nextX + nodeWidth + 1
-        else:
-            global nextY, nodeHeight
-            nextY = nextY + nodeHeight + 1
-            nextX = 0
+        
 
     def getId(self):
         return self.__id
@@ -89,11 +87,14 @@ class NodeClass(object):
     # Drag-n-Drop Functions
     def followCursor(self,mouse_pos):
         print mouse_pos[0], self.__pxX, self.__offsetX
-        self.__unitX = Zoom.pxXToUnit(mouse_pos[0]-self.__offsetX)
-        self.__unitY = Zoom.pxYToUnit(mouse_pos[1]-self.__offsetY)
-        self.__pxX = Zoom.posXtoPixel(self.__unitX)
-        self.__pxY = Zoom.posYtoPixel(self.__unitY)
-        #print ("X:%d  Y:%d" % (self.__unitX, self.__unitY))
+        unit = UnitConv.pxToUnit((mouse_pos[0]-self.__offsetX, mouse_pos[1]-self.__offsetY))
+        self.__unitX = unit[0]
+        self.__unitY = unit[1]
+        
+        px = UnitConv.unitToPx((self.__unitX, self.__unitY))
+        self.__pxX = px[0]
+        self.__pxY = px[1]
+        print ("X:%d  Y:%d" % (self.__unitX, self.__unitY))
 
     # End Drag-n-Drop Functions
 
@@ -107,14 +108,20 @@ class NodeClass(object):
         self.__selected = False
         self.__color = BLACK
 
+    # Updates Coords
     def updateCoords(self):
         global nodeHeight, nodeWidth
         if not self.__selected:
-            self.__pxX = Zoom.posXtoPixel(self.__unitX)
-            self.__pxY = Zoom.posYtoPixel(self.__unitY)
-            self.__pxWidth = Zoom.dimToPixels(nodeWidth)
-            self.__pxHeight = Zoom.dimToPixels(nodeHeight)
-            fontObj = pygame.font.Font('freesansbold.ttf', int(Zoom.dimToPixels(0.5)))
+            px = UnitConv.unitToPx((self.__unitX, self.__unitY))
+            self.__pxX = px[0]
+            self.__pxY = px[1]
+            
+            dimPx = UnitConv.unitDimToPx((nodeWidth,nodeHeight))
+            self.__pxWidth = dimPx[0]
+            self.__pxHeight = dimPx[1]
+
+            fontSizePx = UnitConv.unitDimToPx((0,0.5))
+            fontObj = pygame.font.Font('freesansbold.ttf',int(fontSizePx[1]))
             self.__textSurf = fontObj.render(self.__name, True, BLACK, WHITE)
             self.__textObj = self.__textSurf.get_rect()
 

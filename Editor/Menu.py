@@ -1,5 +1,6 @@
-import pygame, sys
+import pygame, sys, pickle
 import Button
+
 
 GREY = (210,210,210)
 
@@ -20,9 +21,13 @@ class MenuClass(object):
 		self.__gridCols = gridCols
 
 		# Create Buttons Here
-		self.addButton("Add Node",2,3,2,2,self.addNode)
-		self.addButton("Sair",0,12,4,4, self.quit_now )
-		self.addButton("Delete Node", 0,5,4,1,self.deleteNode)
+		# self.addButton(text,gridX,gridY,width,height,callback)
+		self.addButton("Save Network",0,0,4,1,self.save)
+		self.addButton("Load Network",0,1,4,1,self.save)
+		self.addButton("Add Node",0,4,4,1,self.addNode)
+		self.addButton("Delete Node", 0,6,4,1,self.deleteNode)
+		self.addButton("Sair",0,14,4,2, self.quit_now )
+		
 	
 	def getSurface(self):
 		return self.__surface
@@ -89,3 +94,10 @@ class MenuClass(object):
 		#     self.__keyboardHandler(eType,values)
 		else:
 			print "Unknown input source"
+
+
+	def save(self):
+		node = [1,0,1,"joao"]
+
+		file = open("dumpFile.xxx", "w")
+		pickle.dump(node,file)

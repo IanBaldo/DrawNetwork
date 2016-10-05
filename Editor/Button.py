@@ -30,11 +30,11 @@ class BtnClass(object):
 
         # Text
         fontObj = pygame.font.Font('freesansbold.ttf', 10)
-        self.__textSurf = fontObj.render(self.__text, True, BLACK, WHITE)
+        self.__textSurf = fontObj.render(self.__text, True, WHITE, BLUE)
         self.__textObj = self.__textSurf.get_rect()
 
     def draw(self,surface):
-        pygame.draw.rect(surface,BLUE,(self.__posX,self.__posY,self.__width,self.__height),1)
+        pygame.draw.rect(surface,BLUE,(self.__posX,self.__posY,self.__width,self.__height),0)
         self.__textObj.center = (self.__posX+int(self.__width/2),self.__posY+int(self.__height/2))
         surface.blit(self.__textSurf, self.__textObj)
 
