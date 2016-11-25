@@ -1,9 +1,12 @@
-import pygame, sys, pickle
+import pygame, sys, json
 import Button
 
 
-GREY = (210,210,210)
-
+GREY = (230,230,230)
+GREEN = (0,150,0)
+BLUE = (100,100,250)
+RED = (200,0,0)
+ORANGE =  (200,100,0)
 
 class MenuClass(object):
 	__isClicked = False
@@ -21,12 +24,12 @@ class MenuClass(object):
 		self.__gridCols = gridCols
 
 		# Create Buttons Here
-		# self.addButton(text,gridX,gridY,width,height,callback)
-		self.addButton("Save Network",0,0,4,1,self.save)
-		self.addButton("Load Network",0,1,4,1,self.save)
-		self.addButton("Add Node",0,4,4,1,self.addNode)
-		self.addButton("Delete Node", 0,6,4,1,self.deleteNode)
-		self.addButton("Sair",0,14,4,2, self.quit_now )
+		# self.addButton(text,gridX,gridY,width,height,callback,color)
+		self.addButton("Save Network",0,0,4,1,self.save,BLUE)
+		self.addButton("Load Network",0,1,4,1,self.load,BLUE)
+		self.addButton("Add Node",0,4,4,1,self.addNode,GREEN)
+		self.addButton("Delete Node", 0,6,4,1,self.deleteNode,ORANGE)
+		self.addButton("Exit",0,15,4,1, self.quit_now,RED)
 		
 	
 	def getSurface(self):
@@ -38,18 +41,18 @@ class MenuClass(object):
 			button.draw(self.__surface)
 	
 	def addNode(self):
-		self.__networkObj.addNode()
+		self.__networkObj.newNode()
 
 	def deleteNode(self):
 		self.__networkObj.deleteSelectedNodes()
 	
-	def addButton(self,text,gridX,gridY,sizeCols,sizeRows,callback):
-		posX = (self.__surface.get_width() / self.__gridCols ) * gridX
-		posY = (self.__surface.get_height() / self.__gridRows) * gridY
-		height = (self.__surface.get_height() / self.__gridRows) * sizeRows
-		width = (self.__surface.get_width() / self.__gridCols ) * sizeCols
-
-		self.__buttonList.append(Button.BtnClass(text,posX,posY,width,height,callback))
+	def addButton(self,text,gridX,gridY,sizeCols,sizeRows,callback,color):
+		posX = (float(self.__surface.get_width() / self.__gridCols ) * gridX)
+		posY = (float(self.__surface.get_height() / self.__gridRows) * gridY)
+		height = (float(self.__surface.get_height() / self.__gridRows) * sizeRows)
+		width = (float(self.__surface.get_width() / self.__gridCols ) * sizeCols)
+		print float(self.__surface.get_height()) / float(self.__gridRows)
+		self.__buttonList.append(Button.BtnClass(text,posX,posY,width,height,callback,color))
 
 	def quit_now(self):
 		pygame.quit()
@@ -97,7 +100,7 @@ class MenuClass(object):
 
 
 	def save(self):
-		node = [1,0,1,"joao"]
+		self.__networkObj.save()
 
-		file = open("dumpFile.xxx", "w")
-		pickle.dump(node,file)
+	def load(self):
+		self.__networkObj.load()
