@@ -40,7 +40,7 @@ def surfaceClick(mouse_pos):
         # Clicked inside of the DISPLAYsurf
         return NetworkObj.getSurface(), (mouse_pos[0]-displayCoord[0],mouse_pos[1])
 
-NetworkObj.addNode()
+
 
 # Main Loop
 while True:
