@@ -2,12 +2,12 @@ import pygame
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
-BLUE = (100,100,250)
 
 class BtnClass(object):
     __surface = None
+    __color = None
 
-    __height = 60
+    __height = 1
     __width = 0
 
     __posX = None
@@ -20,21 +20,21 @@ class BtnClass(object):
 
     __func = None
 
-    def __init__(self, text, posx, posy, width, height, function):
+    def __init__(self, text, posx, posy, width, height, function, color):
         self.__text = text
         self.__posX = posx
         self.__posY = posy
         self.__width = width
         self.__height = height
         self.__func = function
-
+        self.__color = color
         # Text
         fontObj = pygame.font.Font('freesansbold.ttf', 10)
-        self.__textSurf = fontObj.render(self.__text, True, WHITE, BLUE)
+        self.__textSurf = fontObj.render(self.__text, True, WHITE, color)
         self.__textObj = self.__textSurf.get_rect()
 
     def draw(self,surface):
-        pygame.draw.rect(surface,BLUE,(self.__posX,self.__posY,self.__width,self.__height),0)
+        pygame.draw.rect(surface,self.__color,(self.__posX,self.__posY,self.__width,self.__height),0)
         self.__textObj.center = (self.__posX+int(self.__width/2),self.__posY+int(self.__height/2))
         surface.blit(self.__textSurf, self.__textObj)
 
