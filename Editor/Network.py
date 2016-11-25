@@ -1,5 +1,6 @@
-import pygame
+import pygame, copy
 import Node, UnitConv
+import NetState
 
 WHITE = (255,255,255)
 
@@ -31,6 +32,9 @@ class NetworkClass(object):
 
     def getNodeList(self):
         return self.__nodeList
+    
+    def clearNodeList(self):
+        self.__nodeList = []
 
     def getNode(self, id):
         for node in self.__nodeList:
@@ -38,8 +42,14 @@ class NetworkClass(object):
                 return node
         return -1
 
-    def addNode(self):
+    def getEnvAttr(self):
+        return (self.__corner,self.__width,self.__windowRatio)
+
+    def newNode(self):
         self.__nodeList.append(Node.NodeClass())
+
+    def addNode(self,node):
+        self.__nodeList.append(Node.NodeClass(node))
 
     def deleteNode(self, node):
         self.__nodeList.remove(node)
@@ -96,7 +106,7 @@ class NetworkClass(object):
                     lastNode.select(values["key"])
 
             elif values["key"] == 2: # MIDDLE Mouse Button
-                print "Apertou C x:%f y:%f" % (self.__corner)
+                #print "Apertou C x:%f y:%f" % (self.__corner)
                 lastNode = None
                 for node in self.__nodeList:
                   #  print node.clicked(values["mouse_pos"])
@@ -158,3 +168,25 @@ class NetworkClass(object):
             self.__keyboardHandler(eType,values)
         else:
             print "Unknown input source"
+
+
+    def save(self):
+        file = open('dumpJson.xxx','w')
+        print ("Save",self.__corner, self.__width, self.__windowRatio)
+        NetState.setNodeList(self.__nodeList)
+        NetState.setHeader((self.__corner,self.__width,self.__windowRatio))
+        NetState.save(file)
+        file.close()
+         
+    def load(self):
+        file = open('dumpJson.xxx','r')
+        print ("LOAD: Prev",self.__corner, self.__width, self.__windowRatio)
+        NetState.loadSafadao(file)
+        self.__corner,self.__width, self.__windowRatio = NetState.getHeader()
+        print ("LOAD: after",self.__corner, self.__width, self.__windowRatio)
+        nodes = NetState.getNodeList()
+        self.clearNodeList()
+        for node in nodes:
+            self.addNode(node)
+        file.close()
+        
