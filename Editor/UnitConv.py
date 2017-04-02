@@ -33,3 +33,7 @@ def pxToUnit(px):
 def unitDimToPx(dim):
     global x_factor,y_factor
     return (dim[0]*x_factor,dim[1]*y_factor)
+
+def pxDimToUnit(dim):
+    global x_factor,y_factor
+    return (dim[0]/x_factor,dim[1]/y_factor)
