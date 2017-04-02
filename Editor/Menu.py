@@ -51,7 +51,7 @@ class MenuClass(object):
 		posY = (float(self.__surface.get_height() / self.__gridRows) * gridY)
 		height = (float(self.__surface.get_height() / self.__gridRows) * sizeRows)
 		width = (float(self.__surface.get_width() / self.__gridCols ) * sizeCols)
-		print float(self.__surface.get_height()) / float(self.__gridRows)
+		# print float(self.__surface.get_height()) / float(self.__gridRows)
 		self.__buttonList.append(Button.BtnClass(text,posX,posY,width,height,callback,color))
 
 	def quit_now(self):
