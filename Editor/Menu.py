@@ -7,6 +7,7 @@ GREEN = (0,150,0)
 BLUE = (100,100,250)
 RED = (200,0,0)
 ORANGE =  (200,100,0)
+AQUA = (22, 160, 133)
 
 class MenuClass(object):
 	__isClicked = False
@@ -25,10 +26,11 @@ class MenuClass(object):
 
 		# Create Buttons Here
 		# self.addButton(text,gridX,gridY,width,height,callback,color)
-		self.addButton("Save Network",0,0,4,1,self.save,BLUE)
+		self.addButton("Save Network",0,0,4,1,self.save,BLUE) 
 		self.addButton("Load Network",0,1,4,1,self.load,BLUE)
-		self.addButton("Add Node",0,4,4,1,self.addNode,GREEN)
+		self.addButton("Add Node",0,4,4,2,self.addNode,GREEN)
 		self.addButton("Delete Node", 0,6,4,1,self.deleteNode,ORANGE)
+		self.addButton("List Connections",0,8,4,6,self.listConnections,AQUA)
 		self.addButton("Exit",0,15,4,1, self.quit_now,RED)
 		
 	
@@ -104,3 +106,8 @@ class MenuClass(object):
 
 	def load(self):
 		self.__networkObj.load()
+
+	def listConnections(self):
+		print "###### \tListing connections \t######\n"
+		self.__networkObj.findConnections()
+		print "\n\n"

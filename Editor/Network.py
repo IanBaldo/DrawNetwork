@@ -1,4 +1,4 @@
-import pygame, copy
+import pygame, copy, math
 import Node, UnitConv
 import NetState
 
@@ -59,6 +59,9 @@ class NetworkClass(object):
 
     def refresh(self):
         self.__surface.fill(WHITE)
+        for node in self.__nodeList:
+            if node.isSelected()[0]:
+                node.drawRange(self.__surface)
         for node in self.__nodeList:
             node.draw(self.__surface)
 
@@ -190,3 +193,23 @@ class NetworkClass(object):
             self.addNode(node)
         file.close()
         
+    def debugConnections(self):
+        for nodeSource in self.__nodeList:
+            for nodeTarget in self.__nodeList:
+                if nodeSource.getId() != nodeTarget.getId():
+                    dist = self.calcDist(nodeSource.getPos(),nodeTarget.getPos())
+                    radioDist = UnitConv.pxDimToUnit((nodeSource.getRadioRange()))[0]
+                    print "\t%d -> %d  \t| %.2f < %d \t\t| %d" % (nodeSource.getId(), nodeTarget.getId(),dist,radioDist,dist <= radioDist)
+                   
+    def findConnections(self):
+        for nodeSource in self.__nodeList:
+            for nodeTarget in self.__nodeList:
+                if nodeSource.getId() != nodeTarget.getId():
+                    dist = self.calcDist(nodeSource.getPos(),nodeTarget.getPos())
+                    radioDist = UnitConv.pxDimToUnit((nodeSource.getRadioRange()))[0]
+                    # print "\t%d -> %d  \t| %d  \t| %d" % (nodeSource.getId(), nodeTarget.getId(),dist,dist <= radioDist)
+                    if dist <= radioDist:
+                        print "\t%d -> %d  \t| %.2f" % (nodeSource.getId(), nodeTarget.getId(),dist)
+
+    def calcDist(self,a,b):
+        return math.sqrt(math.pow((a[0]-b[0]),2)+math.pow((a[1]-b[1]),2))

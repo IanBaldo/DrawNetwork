@@ -4,7 +4,12 @@ import UnitConv
 # Colors
 WHITE = (255,255,255)
 BLACK = (0,0,0)
-BLUE = (0,0,255)
+BLUE = (230, 126, 34)
+GREEN = (46, 204, 113)
+CARROT = (230, 126, 34)
+ORANGE = (243, 156, 18)
+RED = (192, 57, 43)
+
 
 #Id Pool
 idPool = 1
@@ -17,6 +22,9 @@ nodeSize = 1
 fontSize = nodeSize * 1
 nodeWidth = float(nodeSize * 2.5)
 nodeHeight = float(nodeSize * 2)
+
+# Radio range
+radioRange = (10,10)
 
 class NodeClass(object):
     __id = 0
@@ -44,7 +52,7 @@ class NodeClass(object):
 
     # Constructor
     def __init__(self, nodeData=None):
-        global idPool, nodeWidth, nodeHeight, nextX, nextY
+        global idPool, nodeWidth, nodeHeight, nextX, nextY, radioRange
         if(nodeData):
             self.__name = nodeData['name']
             self.__id = nodeData['id']
@@ -57,6 +65,7 @@ class NodeClass(object):
             self.__unitY = nextY
         
         self.__color = BLACK
+        self.__range = UnitConv.unitDimToPx(radioRange)
 
         px = UnitConv.unitToPx((self.__unitX, self.__unitY))
         self.__pxX = px[0]
@@ -82,6 +91,9 @@ class NodeClass(object):
     def getPos(self):
         return (self.__unitX,self.__unitY)
 
+    def getRadioRange(self):
+        return self.__range
+
     def getName(self):
         return self.__name
     
@@ -95,10 +107,17 @@ class NodeClass(object):
             self.__mKey = "MIDDLE"
         elif mKey == 3:
             self.__mKey = "RIGHT"
+            if self.__selected:
+                self.deselect()
+                return
 
         self.__selected = True
-        self.__color = BLUE
+        self.__color = CARROT
        # print "Node %d selected with %s mouse key" % (self.__id, self.__mKey)
+
+    def deselect(self):
+        self.__selected = False
+        self.__color = BLACK
 
     # Drag-n-Drop Functions
     def followCursor(self,mouse_pos):
@@ -127,19 +146,21 @@ class NodeClass(object):
     # Updates Coords
     def updateCoords(self):
         global nodeHeight, nodeWidth
-        if not self.__selected:
-            px = UnitConv.unitToPx((self.__unitX, self.__unitY))
-            self.__pxX = px[0]
-            self.__pxY = px[1]
-            
-            dimPx = UnitConv.unitDimToPx((nodeWidth,nodeHeight))
-            self.__pxWidth = dimPx[0]
-            self.__pxHeight = dimPx[1]
+        # if not self.__selected:
+        px = UnitConv.unitToPx((self.__unitX, self.__unitY))
+        self.__pxX = px[0]
+        self.__pxY = px[1]
+        
+        dimPx = UnitConv.unitDimToPx((nodeWidth,nodeHeight))
+        self.__pxWidth = dimPx[0]
+        self.__pxHeight = dimPx[1]
 
-            fontSizePx = UnitConv.unitDimToPx((0,fontSize))
-            fontObj = pygame.font.Font('freesansbold.ttf',int(fontSizePx[1]))
-            self.__textSurf = fontObj.render(self.__name, True, BLACK, WHITE)
-            self.__textObj = self.__textSurf.get_rect()
+        self.__range = UnitConv.unitDimToPx(radioRange)
+
+        fontSizePx = UnitConv.unitDimToPx((0,fontSize))
+        fontObj = pygame.font.Font('freesansbold.ttf',int(fontSizePx[1]))
+        self.__textSurf = fontObj.render(self.__name, True, BLACK, WHITE)
+        self.__textObj = self.__textSurf.get_rect()
 
     def calcOffset(self,mouse_pos):
         self.__offsetX = mouse_pos[0] - self.__pxX
@@ -150,3 +171,9 @@ class NodeClass(object):
         pygame.draw.rect(surface,WHITE,(self.__pxX + self.__border,self.__pxY + self.__border,self.__pxWidth - self.__border,self.__pxHeight - self.__border),0)
         self.__textObj.center = (self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2))
         surface.blit(self.__textSurf, self.__textObj)
+
+    def drawRange(self, surface):
+        # pygame.draw.circle(surface,RED,(self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2)),int((self.__range[0]*1.3)*1.3),0)
+        # pygame.draw.circle(surface,ORANGE,(self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2)),int(self.__range[0] * 1.3 ) ,0)
+        pygame.draw.circle(surface,GREEN,(self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2)),int(self.__range[0]),0)
+        pygame.draw.circle(surface,BLACK,(self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2)),int(self.__range[0]),1)
