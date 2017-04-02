@@ -4,7 +4,7 @@ from pygame.locals import *
 import Network, Menu
 
 # Window
-window_dimensions = window_width, window_height = (900,600)
+window_dimensions = window_width, window_height = (800,700)
 MAINsurf = pygame.display.set_mode(window_dimensions)
 
 menuWidth = 100
