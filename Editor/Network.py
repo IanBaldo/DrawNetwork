@@ -15,6 +15,8 @@ class NetworkClass(object):
 
     __mouseLastPos = None
 
+    __connections = []
+
 
     def __init__(self, surface, width=30, corner=(-10,-10)):
         self.__surface = surface
@@ -198,18 +200,39 @@ class NetworkClass(object):
             for nodeTarget in self.__nodeList:
                 if nodeSource.getId() != nodeTarget.getId():
                     dist = self.calcDist(nodeSource.getPos(),nodeTarget.getPos())
-                    radioDist = UnitConv.pxDimToUnit((nodeSource.getRadioRange()))[0]
-                    print "\t%d -> %d  \t| %.2f < %d \t\t| %d" % (nodeSource.getId(), nodeTarget.getId(),dist,radioDist,dist <= radioDist)
+                    print "\t%d -> %d  \t| %.2f" % (nodeSource.getId(), nodeTarget.getId(),dist)
                    
     def findConnections(self):
+        self.__connections = []
         for nodeSource in self.__nodeList:
             for nodeTarget in self.__nodeList:
                 if nodeSource.getId() != nodeTarget.getId():
                     dist = self.calcDist(nodeSource.getPos(),nodeTarget.getPos())
-                    radioDist = UnitConv.pxDimToUnit((nodeSource.getRadioRange()))[0]
-                    # print "\t%d -> %d  \t| %d  \t| %d" % (nodeSource.getId(), nodeTarget.getId(),dist,dist <= radioDist)
-                    if dist <= radioDist:
-                        print "\t%d -> %d  \t| %.2f" % (nodeSource.getId(), nodeTarget.getId(),dist)
+                    sRadioSpecs = nodeSource.getRadioRange()
+                    thisConnection = {}
+                    for i in range(2,-1,-1):
+                        if(sRadioSpecs[i][0] < dist):
+                            break
+                        thisConnection['source'] = nodeSource.getId()
+                        thisConnection['target'] = nodeTarget.getId()
+                        thisConnection['dist'] = dist
+                        thisConnection['distThreshold'] = sRadioSpecs[i][0]
+                        thisConnection['attenuation'] = sRadioSpecs[i][1]
+                    
+                    if thisConnection:
+                        self.__connections.append(thisConnection)
+                    
+                    thisConnection = {}
+
+        # self.debugConnections()
+        self.printConnections()
+
 
     def calcDist(self,a,b):
         return math.sqrt(math.pow((a[0]-b[0]),2)+math.pow((a[1]-b[1]),2))
+
+    def printConnections(self):
+        print "\n\n\tSrc -> Tgt \t| dist   \t| attenuation"
+        for con in self.__connections:
+            # print con
+            print "\t %d -> %d  \t| %.2f   \t| %d" % (con['source'],con['target'],con['dist'],con['attenuation'])

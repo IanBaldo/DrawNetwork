@@ -26,7 +26,7 @@ nodeWidth = float(nodeSize * 2.5)
 nodeHeight = float(nodeSize * 2)
 
 # Radio range
-radioRange = (10,10)
+radioSpecs = [(10,99),(15,85),(20,60)]
 
 class NodeClass(object):
     __id = 0
@@ -54,20 +54,21 @@ class NodeClass(object):
 
     # Constructor
     def __init__(self, nodeData=None):
-        global idPool, nodeWidth, nodeHeight, nextX, nextY, radioRange
+        global idPool, nodeWidth, nodeHeight, nextX, nextY, radioSpecs
         if(nodeData):
             self.__name = nodeData['name']
             self.__id = nodeData['id']
             self.__unitX = nodeData['pos'][0]
             self.__unitY = nodeData['pos'][1]
+            self.__radio = nodeData['radio']
         else:
             self.__name = str(idPool)
             self.__id = idPool
             self.__unitX = nextX
             self.__unitY = nextY
+            self.__radio = radioSpecs
         
         self.__color = BLACK
-        self.__range = UnitConv.unitDimToPx(radioRange)
 
         px = UnitConv.unitToPx((self.__unitX, self.__unitY))
         self.__pxX = px[0]
@@ -94,7 +95,7 @@ class NodeClass(object):
         return (self.__unitX,self.__unitY)
 
     def getRadioRange(self):
-        return self.__range
+        return self.__radio
 
     def getName(self):
         return self.__name
@@ -157,10 +158,9 @@ class NodeClass(object):
         self.__pxWidth = dimPx[0]
         self.__pxHeight = dimPx[1]
 
-        self.__range = UnitConv.unitDimToPx(radioRange)
 
-        fontSizePx = UnitConv.unitDimToPx((0,fontSize))
-        fontObj = pygame.font.Font('freesansbold.ttf',int(fontSizePx[1]))
+        fontSizePx = UnitConv.dimYtoPx(fontSize)
+        fontObj = pygame.font.Font('freesansbold.ttf',int(fontSizePx))
         self.__textSurf = fontObj.render(self.__name, True, BLACK, WHITE)
         self.__textObj = self.__textSurf.get_rect()
 
@@ -175,6 +175,6 @@ class NodeClass(object):
         surface.blit(self.__textSurf, self.__textObj)
 
     def drawRange(self, surface):
-        pygame.draw.circle(surface,Light_GREEN,(self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2)),int((self.__range[0]*1.3)*1.3),0)
-        pygame.draw.circle(surface,GREEN,(self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2)),int(self.__range[0] * 1.3 ) ,0)
-        pygame.draw.circle(surface,Dark_GREEN,(self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2)),int(self.__range[0]),0)
+        pygame.draw.circle(surface,Light_GREEN,(self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2)),int(UnitConv.dimXtoPx(self.__radio[2][0])),0)
+        pygame.draw.circle(surface,GREEN,(self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2)),int(UnitConv.dimXtoPx(self.__radio[1][0]) ) ,0)
+        pygame.draw.circle(surface,Dark_GREEN,(self.__pxX+int(self.__pxWidth/2),self.__pxY+int(self.__pxHeight/2)),int(UnitConv.dimXtoPx(self.__radio[0][0])),0)
