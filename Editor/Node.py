@@ -19,6 +19,8 @@ idPool = 1
 nextX = 0
 nextY = 0
 
+prevCorner = None
+
 # Fictional Unit Size
 nodeSize = 1
 fontSize = nodeSize * 1
@@ -53,8 +55,13 @@ class NodeClass(object):
     __selected = False
 
     # Constructor
-    def __init__(self, nodeData=None):
-        global idPool, nodeWidth, nodeHeight, nextX, nextY, radioSpecs
+    def __init__(self, corner, nodeData=None):
+        global idPool, nodeWidth, nodeHeight, nextX, nextY, radioSpecs, prevCorner
+        if  corner != prevCorner:
+            prevCorner = corner
+            nextX = 0
+            nextY = 0
+
         if(nodeData):
             self.__name = nodeData['name']
             self.__id = nodeData['id']
@@ -64,8 +71,8 @@ class NodeClass(object):
         else:
             self.__name = str(idPool)
             self.__id = idPool
-            self.__unitX = nextX
-            self.__unitY = nextY
+            self.__unitX = corner[0] + nextX
+            self.__unitY = corner[1] + nextY
             self.__radio = radioSpecs
         
         self.__color = BLACK

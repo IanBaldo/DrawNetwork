@@ -48,10 +48,10 @@ class NetworkClass(object):
         return (self.__corner,self.__width,self.__windowRatio)
 
     def newNode(self):
-        self.__nodeList.append(Node.NodeClass())
+        self.__nodeList.append(Node.NodeClass(self.__corner))
 
     def addNode(self,node):
-        self.__nodeList.append(Node.NodeClass(node))
+        self.__nodeList.append(Node.NodeClass(self.__corner,node))
 
     def deleteNode(self, node):
         self.__nodeList.remove(node)
