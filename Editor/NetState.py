@@ -29,6 +29,10 @@ def setHeader(header):
     netState['header']['width']     = header[1]
     netState['header']['windowRatio'] = header[2]
 
+def setConnections(connections):
+    global netState
+    netState['connections'] = connections
+
 def getNodeList():
     global netState
     return netState['nodeList']
@@ -36,3 +40,7 @@ def getNodeList():
 def getHeader():
     global netState
     return (netState['header']['corner'], netState['header']['width'], netState['header']['windowRatio'])
+
+def getConnections():
+    global netState
+    return netState['connections']
