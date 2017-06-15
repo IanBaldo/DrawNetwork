@@ -65,8 +65,8 @@ class NodeClass(object):
         if(nodeData):
             self.__name = nodeData['name']
             self.__id = nodeData['id']
-            self.__unitX = nodeData['pos'][0]
-            self.__unitY = nodeData['pos'][1]
+            self.__unitX = nodeData['pos']['unitB'][0]
+            self.__unitY = nodeData['pos']['unitB'][1]
             self.__radio = nodeData['radio']
         else:
             self.__name = str(idPool)
@@ -99,7 +99,10 @@ class NodeClass(object):
         return self.__id
 
     def getPos(self):
-        return (self.__unitX,self.__unitY)
+        temp = {}
+        temp['unitB'] = (self.__unitX, self.__unitY)
+        temp['pixels'] = (self.__pxX, self.__pxY)
+        return temp
 
     def getRadioRange(self):
         return self.__radio

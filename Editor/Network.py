@@ -188,7 +188,7 @@ class NetworkClass(object):
     def load(self):
         file = open('dumpJson.xxx','r')
         print ("LOAD: Prev",self.__corner, self.__width, self.__windowRatio)
-        NetState.loadSafadao(file)
+        NetState.load(file)
         self.__corner,self.__width, self.__windowRatio = NetState.getHeader()
         print ("LOAD: after",self.__corner, self.__width, self.__windowRatio)
         nodes = NetState.getNodeList()
@@ -201,7 +201,7 @@ class NetworkClass(object):
         for nodeSource in self.__nodeList:
             for nodeTarget in self.__nodeList:
                 if nodeSource.getId() != nodeTarget.getId():
-                    dist = self.calcDist(nodeSource.getPos(),nodeTarget.getPos())
+                    dist = self.calcDist(nodeSource.getPos()['unitB'],nodeTarget.getPos()['unitB'])
                     print "\t%d -> %d  \t| %.2f" % (nodeSource.getId(), nodeTarget.getId(),dist)
                    
     def findConnections(self):
@@ -209,7 +209,7 @@ class NetworkClass(object):
         for nodeSource in self.__nodeList:
             for nodeTarget in self.__nodeList:
                 if nodeSource.getId() != nodeTarget.getId():
-                    dist = self.calcDist(nodeSource.getPos(),nodeTarget.getPos())
+                    dist = self.calcDist(nodeSource.getPos()['unitB'],nodeTarget.getPos()['unitB'])
                     sRadioSpecs = nodeSource.getRadioRange()
                     thisConnection = {}
                     for i in range(2,-1,-1):

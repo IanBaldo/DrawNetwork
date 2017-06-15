@@ -4,9 +4,9 @@ netState = {}
 netState['header'] = {}
 netState['nodeList'] = []
 
-def loadSafadao(file):
-        global netState
-        netState = json.load(file)
+def load(file):
+    global netState
+    netState = json.load(file)
         
 def save(file):
     global netState
@@ -21,6 +21,7 @@ def setNodeList(nodes):
         temp['id'] = node.getId()
         temp['pos'] = node.getPos()
         temp['name'] = node.getName()
+        temp['radio'] = node.getRadioRange()
         netState['nodeList'].append(temp)
 
 def setHeader(header):
