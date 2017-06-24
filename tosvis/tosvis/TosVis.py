@@ -288,7 +288,9 @@ class TosVis(object):
         if not match: return
         id = int(match.group(1))
         detail = match.group(2)
-        self.nodes[id].processDbgMsg(detail)
+        for idx,node in enumerate(self.nodes):
+            if node.id == id:
+                self.nodes[idx].processDbgMsg(detail)
 
     ####################
     def run_tossim(self):
