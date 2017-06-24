@@ -227,7 +227,7 @@ class NetworkClass(object):
                     thisConnection = {}
 
         # self.debugConnections()
-        self.printConnections()
+        # self.printConnections()
 
 
     def calcDist(self,a,b):
