@@ -114,4 +114,4 @@ class MenuClass(object):
 
 	def run(self):
 		self.__networkObj.save()
-		os.system('python tosvis/example.py')
+		os.system('python '+os.getcwd()+'/tosvis/tvRun.py')

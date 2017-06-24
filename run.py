@@ -1,3 +1,3 @@
 import os
 
-os.system('python ./src/Main.py')
+os.system('python '+os.getcwd()+'/src/Main.py')

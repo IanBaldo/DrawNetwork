@@ -1,3 +1,4 @@
+import os
 from tosvis import *
 from random import random
 
@@ -11,7 +12,7 @@ class MyNode(Node):
             Node.animateAmRecv(self,time,amtype,amlen)
 
 ############################### 
-tv = TosVis(100, showDebug=False, file='/home/terra/Documents/DrawNetwork/drawnetwork.json')
+tv = TosVis(100, showDebug=False, file=os.getcwd()+'/drawnetwork.json')
 MONITORED_AM = [0x71]
 
 tv.addNetworkNodes()
