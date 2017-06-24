@@ -1,3 +1,3 @@
 import os
 
-os.system('python Editor/Main.py')
+os.system('python ./src/Main.py')
