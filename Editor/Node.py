@@ -28,7 +28,7 @@ nodeWidth = float(nodeSize * 2.5)
 nodeHeight = float(nodeSize * 2)
 
 # Radio range
-radioSpecs = [(10,99),(15,85),(20,60)]
+radioSpecs = [(10,1),(15,15),(20,40)]
 
 class NodeClass(object):
     __id = 0

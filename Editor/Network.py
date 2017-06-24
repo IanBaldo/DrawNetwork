@@ -177,7 +177,7 @@ class NetworkClass(object):
 
     def save(self):
         self.findConnections()
-        file = open('dumpJson.xxx','w')
+        file = open('drawnetwork.json','w')
         print ("Save",self.__corner, self.__width, self.__windowRatio)
         NetState.setNodeList(self.__nodeList)
         NetState.setConnections(self.__connections)
@@ -186,7 +186,7 @@ class NetworkClass(object):
         file.close()
          
     def load(self):
-        file = open('dumpJson.xxx','r')
+        file = open('drawnetwork.json','r')
         print ("LOAD: Prev",self.__corner, self.__width, self.__windowRatio)
         NetState.load(file)
         self.__corner,self.__width, self.__windowRatio = NetState.getHeader()

@@ -1,4 +1,4 @@
-import pygame, sys, json
+import pygame, sys, json, os
 import Button
 
 
@@ -28,6 +28,7 @@ class MenuClass(object):
 		# self.addButton(text,gridX,gridY,width,height,callback,color)
 		self.addButton("Save Network",0,0,4,1,self.save,BLUE) 
 		self.addButton("Load Network",0,1,4,1,self.load,BLUE)
+		self.addButton("RUN TosVis",0,3,4,1,self.run,AQUA)
 		self.addButton("Add Node",0,4,4,2,self.addNode,GREEN)
 		self.addButton("Delete Node", 0,6,4,1,self.deleteNode,ORANGE)
 		self.addButton("List Connections",0,8,4,6,self.listConnections,AQUA)
@@ -111,3 +112,7 @@ class MenuClass(object):
 		print "###### \tListing connections \t######\n"
 		self.__networkObj.findConnections()
 		print "\n\n"
+
+	def run(self):
+		self.__networkObj.save()
+		os.system('python tosvis/example.py')
