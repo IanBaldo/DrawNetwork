@@ -178,7 +178,7 @@ class NetworkClass(object):
     def save(self):
         self.findConnections()
         file = open('drawnetwork.json','w')
-        print ("Save",self.__corner, self.__width, self.__windowRatio)
+        #print ("Save",self.__corner, self.__width, self.__windowRatio)
         NetState.setNodeList(self.__nodeList)
         NetState.setConnections(self.__connections)
         NetState.setHeader((self.__corner,self.__width,self.__windowRatio))
@@ -187,10 +187,10 @@ class NetworkClass(object):
          
     def load(self):
         file = open('drawnetwork.json','r')
-        print ("LOAD: Prev",self.__corner, self.__width, self.__windowRatio)
+        #print ("LOAD: Prev",self.__corner, self.__width, self.__windowRatio)
         NetState.load(file)
         self.__corner,self.__width, self.__windowRatio = NetState.getHeader()
-        print ("LOAD: after",self.__corner, self.__width, self.__windowRatio)
+        #print ("LOAD: after",self.__corner, self.__width, self.__windowRatio)
         nodes = NetState.getNodeList()
         self.clearNodeList()
         for node in nodes:
