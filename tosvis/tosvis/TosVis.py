@@ -181,7 +181,7 @@ class TosVis(object):
         w_WidthB,w_heightB,offsetX,offsetY = self.getNetMaxDim(nodeList)
         factor = self.getB2PFactor(w_WidthB,w_heightB,offsetX,offsetY)
         for node in nodeList:
-            tvNode = Node(((int(node['pos']['unitB'][0])-offsetX)*factor,(int(node['pos']['unitB'][1])-offsetY)*factor))
+            tvNode = Node(((int(node['pos']['unitB'][0])-offsetX)*factor,(int(node['pos']['unitB'][1])-offsetY)*factor), txRange=(node['radio'][2][0]*factor))
             tvNode.id = node['id']
             tvNode.tosvis = self
             tvNode.tossimNode = self.tossim.getNode(tvNode.id)
