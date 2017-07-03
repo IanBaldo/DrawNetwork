@@ -178,9 +178,10 @@ class TosVis(object):
     def addNetworkNodes(self):
         file = open(self.file,'r')
         nodeList = json.load(file)['nodeList']
-
+        w_WidthB,w_heightB,offsetX,offsetY = self.getNetMaxDim(nodeList)
+        factor = self.getB2PFactor(w_WidthB,w_heightB,offsetX,offsetY)
         for node in nodeList:
-            tvNode = Node((int(node['pos']['pixels'][0]),int(node['pos']['pixels'][1])))
+            tvNode = Node(((int(node['pos']['unitB'][0])-offsetX)*factor,(int(node['pos']['unitB'][1])-offsetY)*factor))
             tvNode.id = node['id']
             tvNode.tosvis = self
             tvNode.tossimNode = self.tossim.getNode(tvNode.id)
@@ -188,6 +189,34 @@ class TosVis(object):
             self.nodes.append(tvNode)
             tvNode.tossimNode.bootAtTime(int(random()*self.tossim.ticksPerSecond()))
 
+
+	####################
+	# [BALDO]
+    def getNetMaxDim(self, nodeList):
+        minX =  999
+        maxX = -999
+        minY =  999
+        maxY = -999
+        for node in nodeList:
+            if node['pos']['unitB'][0] < minX:
+                minX = node['pos']['unitB'][0]
+            if node['pos']['unitB'][0] > maxX:
+                maxX = node['pos']['unitB'][0]
+            if node['pos']['unitB'][1] < minY:
+                minY = node['pos']['unitB'][1]
+            if node['pos']['unitB'][1] > maxY:
+                maxY = node['pos']['unitB'][1]
+        # +3 para ter uma folga nas bordas
+        return (maxX+3-minX,maxY+3-minY,minX-1.5,minY-1.5)
+
+    ####################
+    def getB2PFactor(self,width,height,offsetX,offsetY):
+        # 700x700 default window
+        if width > height:
+            fator = 700/width
+        else:
+            fator = 700/height
+        return fator
 
     ####################
     def addNode(self, node, autoBoot=True):
